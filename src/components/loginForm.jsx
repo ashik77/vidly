@@ -14,6 +14,7 @@ class LoginForm extends Component {
   };
 
   validate = () => {
+    //for the whole form
     const options = { abortEarly: false };
     const { error } = Joi.validate(this.state.account, this.schema, options);
     if (!error) return null;
@@ -36,12 +37,12 @@ class LoginForm extends Component {
   };
 
   validateProperty = ({ name, value }) => {
-    if (name === "username") {
-      if (value.trim() === "") return "Username is required.";
-    }
-    if (name === "password") {
-      if (value.trim() === "") return "Password is required.";
-    }
+    //for a field, username or password
+    const obj = { [name]: value };
+    const schema = { [name]: this.schema[name] };
+
+    const { error } = Joi.validate(obj, schema);
+    return error ? error.details[0].message : null;
   };
 
   handleChange = ({ currentTarget: input }) => {
